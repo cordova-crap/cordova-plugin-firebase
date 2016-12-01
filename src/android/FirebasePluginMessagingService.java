@@ -42,20 +42,23 @@ public class FirebasePluginMessagingService extends FirebaseMessagingService {
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
+        boolean showNotification = false;
+        String id = remoteMessage.getMessageId();
+
         String title;
         String text;
-        String id;
+
         if (remoteMessage.getNotification() != null) {
             title = remoteMessage.getNotification().getTitle();
             text = remoteMessage.getNotification().getBody();
-            id = remoteMessage.getMessageId();
         } else {
             title = remoteMessage.getData().get("title");
             text = remoteMessage.getData().get("text");
-            id = remoteMessage.getData().get("id");
         }
 
         if(TextUtils.isEmpty(id)){
+            Log.d(TAG, "Generating Message ID");
+
             Random rand = new Random();
             int  n = rand.nextInt(50) + 1;
             id = Integer.toString(n);
@@ -66,11 +69,17 @@ public class FirebasePluginMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "Notification Message Title: " + title);
         Log.d(TAG, "Notification Message Body/Text: " + text);
 
-        // TODO: Add option to developer to configure if show notification when app on foreground
-        if (!TextUtils.isEmpty(text) || !TextUtils.isEmpty(title)) {
-            boolean showNotification = FirebasePlugin.inBackground() || !FirebasePlugin.hasNotificationsCallback();
-            sendNotification(id, title, text, remoteMessage.getData(), showNotification);
+        if(!TextUtils.isEmpty(text) || !TextUtils.isEmpty(title)) {
+
+            if(remoteMessage.getData().get("show") != null) {
+                showNotification = (boolean)remoteMessage.getData().get("show") == true;
+            } else {
+                showNotification = FirebasePlugin.inBackground() || !FirebasePlugin.hasNotificationsCallback();
+            }
+
         }
+
+        sendNotification(id, title, text, remoteMessage.getData(), showNotification);
     }
 
     private void sendNotification(String id, String title, String messageBody, Map<String, String> data, boolean showNotification) {
