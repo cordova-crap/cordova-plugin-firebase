@@ -124,6 +124,13 @@
 - (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
     // Print full message
     NSLog(@"%@", [remoteMessage appData]);
+
+    NSDictionary *mutableUserInfo = [notification.request.content.userInfo mutableCopy];
+    
+    // Pring full message.
+    NSLog(@"%@", mutableUserInfo);
+    
+    [FirebasePlugin.firebasePlugin sendNotification:mutableUserInfo];
 }
 #endif
 
