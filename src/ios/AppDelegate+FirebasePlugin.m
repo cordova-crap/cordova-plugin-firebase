@@ -125,7 +125,7 @@
     // Print full message
     NSLog(@"%@", [remoteMessage appData]);
 
-    NSDictionary *mutableUserInfo = [notification.request.content.userInfo mutableCopy];
+    NSDictionary *mutableUserInfo = [remoteMessage appData];
     
     // Pring full message.
     NSLog(@"%@", mutableUserInfo);
