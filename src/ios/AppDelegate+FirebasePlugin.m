@@ -125,12 +125,7 @@
     // Print full message
     NSLog(@"%@", [remoteMessage appData]);
 
-    NSDictionary *mutableUserInfo = [remoteMessage appData];
-    
-    // Pring full message.
-    NSLog(@"%@", mutableUserInfo);
-    
-    [FirebasePlugin.firebasePlugin sendNotification:mutableUserInfo];
+    [FirebasePlugin.firebasePlugin sendNotification:remoteMessage.appData];
 }
 #endif
 
